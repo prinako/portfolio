@@ -1,26 +1,43 @@
-# Deno Portfolio Starter
+# Prince Nyarko Portfolio
 
-A production-style developer portfolio starter built with Deno, TypeScript,
-native HTTP serving, and plain HTML/CSS. It is intentionally framework-free so
-the structure stays easy to understand, customize, and scale.
+A bilingual developer portfolio built with Deno, TypeScript, server-rendered
+HTML, and plain CSS. The site is framework-free, easy to deploy, and organized
+so English and Brazilian Portuguese content can evolve independently.
 
 ## Features
 
-- Deno-only runtime with `Deno.serve`
-- TypeScript modules separated by responsibility
-- English (`en-us`) and Brazilian Portuguese (`pt-br`) routes
-- Semantic server-rendered HTML
-- Dark SaaS-style visual system
-- Responsive layout with sticky navigation
-- Glassmorphism cards and smooth hover states
-- Terminal-inspired profile card
-- Health endpoint for deployment checks
+- Native Deno HTTP server with `Deno.serve`
+- Server-rendered semantic HTML
+- English (`en-us`) and Brazilian Portuguese (`pt-br`) pages
+- Automatic language selection on `/` from the browser `Accept-Language` header
+- English fallback when the browser language is not English or Portuguese
+- Shared profile, social link, and technology data
+- Separate CSS entry files for each language
+- Responsive dark visual system
+- `/health` endpoint for deployment checks
+
+## Routes
+
+```text
+/          Uses Accept-Language and falls back to en-us
+/en-us     English page
+/pt-br     Brazilian Portuguese page
+/health    Health check endpoint
+```
+
+Public stylesheet routes:
+
+```text
+/styles.css         English stylesheet alias
+/styles.en-us.css   English stylesheet
+/styles.pt-br.css   Portuguese stylesheet
+/styles.base.css    Shared base stylesheet
+```
 
 ## Project Structure
 
 ```text
 .
-├── .dockerignore
 ├── Dockerfile
 ├── docker-compose.yml
 ├── deno.json
@@ -30,6 +47,7 @@ the structure stays easy to understand, customize, and scale.
 │   │   ├── en-us.ts
 │   │   ├── index.ts
 │   │   ├── pt-br.ts
+│   │   ├── shared.ts
 │   │   └── types.ts
 │   ├── layout.ts
 │   └── styles
@@ -39,17 +57,17 @@ the structure stays easy to understand, customize, and scale.
 └── README.md
 ```
 
-## File Responsibilities
+## File Guide
 
-- `main.ts` contains server logic, route handling, static CSS serving, and the
-  `/health` endpoint.
-- `src/data/en-us.ts` and `src/data/pt-br.ts` contain localized portfolio
-  content, including site information, skills, projects, and workflow
-  experience.
-- `src/layout.ts` contains reusable HTML rendering functions and semantic page
-  composition.
-- `src/styles/base.css` contains shared styling, responsive behavior,
-  animations, and visual theme rules.
+- `main.ts` handles HTTP routing, language detection, static CSS serving, and
+  the `/health` endpoint.
+- `src/layout.ts` renders the page HTML from a language-specific data object.
+- `src/data/en-us.ts` contains English portfolio content.
+- `src/data/pt-br.ts` contains Brazilian Portuguese portfolio content.
+- `src/data/shared.ts` contains values reused by both languages, such as social
+  links and common technology lists.
+- `src/data/types.ts` defines the content model.
+- `src/styles/base.css` contains the shared visual system.
 - `src/styles/en-us.css` and `src/styles/pt-br.css` are language-specific CSS
   entry files.
 
@@ -57,7 +75,7 @@ the structure stays easy to understand, customize, and scale.
 
 - Deno 2.x or newer
 
-No Node.js, npm, package manager, or frontend framework is required.
+No Node.js, npm, or frontend framework is required.
 
 ## Run Locally
 
@@ -67,38 +85,83 @@ Start the development server with file watching:
 deno task dev
 ```
 
-Start the production-style server:
+Start the normal server:
 
 ```sh
 deno task start
 ```
 
-The site is available at:
+Open:
 
 ```text
 http://localhost:8000
-http://localhost:8000/en-us
-http://localhost:8000/pt-br
 ```
 
-The health endpoint is available at:
+## Quality Checks
+
+Type check:
+
+```sh
+deno task check
+```
+
+Lint:
+
+```sh
+deno task lint
+```
+
+Format:
+
+```sh
+deno task fmt
+```
+
+## Editing Content
+
+Update language-specific copy in:
 
 ```text
-http://localhost:8000/health
+src/data/en-us.ts
+src/data/pt-br.ts
 ```
 
-## Run With Docker
+Use `src/data/shared.ts` for values that should stay the same across languages,
+such as profile identity, social links, or repeated technology arrays.
 
-Build the container image:
+When adding a new field, update the types in `src/data/types.ts` first, then add
+the content to each language file and render it in `src/layout.ts`.
 
-```sh
-docker build -t deno-portfolio .
+## Editing Styles
+
+Shared styles belong in:
+
+```text
+src/styles/base.css
 ```
 
-Run the container:
+Language-specific adjustments belong in:
+
+```text
+src/styles/en-us.css
+src/styles/pt-br.css
+```
+
+The language CSS files import the shared base stylesheet through the public
+`/styles.base.css` route.
+
+## Docker
+
+Build the image:
 
 ```sh
-docker run --rm -p 8000:8000 deno-portfolio
+docker build -t portfolio .
+```
+
+Run it:
+
+```sh
+docker run --rm -p 8000:8000 portfolio
 ```
 
 Then open:
@@ -107,27 +170,21 @@ Then open:
 http://localhost:8000
 ```
 
-## Run With Docker Compose
+## Docker Compose
 
-Compose pulls the published GitHub Container Registry image:
-
-```text
-ghcr.io/prinako/portfolio:main
-```
-
-Start the app with Compose:
+Start:
 
 ```sh
 docker compose up
 ```
 
-Run it in the background:
+Run in the background:
 
 ```sh
 docker compose up -d
 ```
 
-Stop the Compose stack:
+Stop:
 
 ```sh
 docker compose down
@@ -139,44 +196,8 @@ Use a different host port:
 PORT=3000 docker compose up
 ```
 
-Then open:
+## Deployment
 
-```text
-http://localhost:3000
-```
-
-## Quality Checks
-
-Run TypeScript checking:
-
-```sh
-deno task check
-```
-
-Format the project:
-
-```sh
-deno task fmt
-```
-
-Lint the project:
-
-```sh
-deno task lint
-```
-
-## Customization
-
-Most portfolio edits should happen in `src/data/en-us.ts` or
-`src/data/pt-br.ts`. Update the exported site information, skill groups,
-projects, and workflow steps without touching server or layout code.
-
-Use `src/layout.ts` when changing page structure, adding sections, or adjusting
-rendered markup. Use `src/styles/base.css` for shared visual changes and the
-language-specific CSS files for per-language adjustments.
-
-## Deployment Notes
-
-This project is suitable for Deno Deploy, containers, or any host that can run a
-Deno process. The server reads `PORT` from the environment and falls back to
-`8000` for local development.
+The app can run anywhere a Deno process can run, including containers and Deno
+Deploy-style environments. It reads `PORT` from the environment and defaults to
+`8000` locally.
