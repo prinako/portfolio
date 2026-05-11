@@ -107,15 +107,17 @@ function renderHero(): string {
         <dl>
           <div>
             <dt>name</dt>
-            <dd>${escapeHtml(siteInfo.name)}</dd>
+            <dd>${escapeHtml(siteInfo.name)} / ${
+    escapeHtml(siteInfo.handle)
+  }</dd>
           </div>
           <div>
             <dt>focus</dt>
-            <dd>semantic AI systems</dd>
+            <dd>${escapeHtml(siteInfo.focus)}</dd>
           </div>
           <div>
             <dt>stack</dt>
-            <dd>Deno · PyTorch · Docker · Linux</dd>
+            <dd>${escapeHtml(siteInfo.stack)}</dd>
           </div>
           <div>
             <dt>status</dt>
@@ -132,7 +134,7 @@ function renderSkills(): string {
     <section class="section-shell content-section" id="skills">
       <div class="section-heading">
         <p class="eyebrow">Core capabilities</p>
-        <h2>Research depth with infrastructure discipline.</h2>
+        <h2>Computer engineering foundations with hands-on product delivery.</h2>
       </div>
       <div class="skills-grid">${skills.map(renderSkillGroup).join("")}</div>
     </section>
@@ -144,7 +146,7 @@ function renderProjects(): string {
     <section class="section-shell content-section" id="projects">
       <div class="section-heading">
         <p class="eyebrow">Selected systems</p>
-        <h2>Projects built for clarity, repeatability, and scale.</h2>
+        <h2>Projects shaped around campus needs, research questions, and reliable infrastructure.</h2>
       </div>
       <div class="project-grid">${projects.map(renderProject).join("")}</div>
     </section>
@@ -156,7 +158,7 @@ function renderProcess(): string {
     <section class="section-shell content-section" id="process">
       <div class="section-heading">
         <p class="eyebrow">Workflow</p>
-        <h2>A practical path from hypothesis to dependable software.</h2>
+        <h2>A practical path from local problem to working software.</h2>
       </div>
       <ol class="process-list">${
     experience.map(renderExperienceStep).join("")
@@ -171,7 +173,7 @@ function renderContact(): string {
       <div class="section-shell contact-shell">
         <div>
           <p class="eyebrow">Contact</p>
-          <h2>Let’s build a system that makes the research useful.</h2>
+          <h2>Let’s build useful software from research, infrastructure, and real-world needs.</h2>
           <p>${escapeHtml(siteInfo.location)} · ${
     escapeHtml(siteInfo.availability)
   }</p>
