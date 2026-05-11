@@ -8,6 +8,7 @@ the structure stays easy to understand, customize, and scale.
 
 - Deno-only runtime with `Deno.serve`
 - TypeScript modules separated by responsibility
+- English (`en-us`) and Brazilian Portuguese (`pt-br`) routes
 - Semantic server-rendered HTML
 - Dark SaaS-style visual system
 - Responsive layout with sticky navigation
@@ -25,9 +26,16 @@ the structure stays easy to understand, customize, and scale.
 ├── deno.json
 ├── main.ts
 ├── src
-│   ├── data.ts
+│   ├── data
+│   │   ├── en-us.ts
+│   │   ├── index.ts
+│   │   ├── pt-br.ts
+│   │   └── types.ts
 │   ├── layout.ts
-│   └── styles.css
+│   └── styles
+│       ├── base.css
+│       ├── en-us.css
+│       └── pt-br.css
 └── README.md
 ```
 
@@ -35,12 +43,15 @@ the structure stays easy to understand, customize, and scale.
 
 - `main.ts` contains server logic, route handling, static CSS serving, and the
   `/health` endpoint.
-- `src/data.ts` contains all portfolio content, including site information,
-  skills, projects, and workflow experience.
+- `src/data/en-us.ts` and `src/data/pt-br.ts` contain localized portfolio
+  content, including site information, skills, projects, and workflow
+  experience.
 - `src/layout.ts` contains reusable HTML rendering functions and semantic page
   composition.
-- `src/styles.css` contains all styling, responsive behavior, animations, and
-  visual theme rules.
+- `src/styles/base.css` contains shared styling, responsive behavior,
+  animations, and visual theme rules.
+- `src/styles/en-us.css` and `src/styles/pt-br.css` are language-specific CSS
+  entry files.
 
 ## Requirements
 
@@ -66,6 +77,8 @@ The site is available at:
 
 ```text
 http://localhost:8000
+http://localhost:8000/en-us
+http://localhost:8000/pt-br
 ```
 
 The health endpoint is available at:
@@ -154,12 +167,13 @@ deno task lint
 
 ## Customization
 
-Most portfolio edits should happen in `src/data.ts`. Update the exported site
-information, skill groups, projects, and workflow steps without touching server
-or layout code.
+Most portfolio edits should happen in `src/data/en-us.ts` or
+`src/data/pt-br.ts`. Update the exported site information, skill groups,
+projects, and workflow steps without touching server or layout code.
 
 Use `src/layout.ts` when changing page structure, adding sections, or adjusting
-rendered markup. Use `src/styles.css` for all visual changes.
+rendered markup. Use `src/styles/base.css` for shared visual changes and the
+language-specific CSS files for per-language adjustments.
 
 ## Deployment Notes
 
