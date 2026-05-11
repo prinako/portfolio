@@ -1,0 +1,11 @@
+@import url("/styles.base.css");
+
+:root {
+  --language-accent: var(--accent-strong);
+}
+
+.hero-summary,
+.project-card p,
+.process-step p {
+  max-width: 760px;
+}
