@@ -1,6 +1,6 @@
 import { renderHomePage } from "./src/layout.ts";
 
-const PORT = Number(Deno.env.get("PORT") ?? 8000);
+const DEFAULT_PORT = 8000;
 const STYLE_PATH = new URL("./src/styles.css", import.meta.url);
 
 const textHeaders = {
@@ -17,6 +17,20 @@ function jsonResponse(data: unknown, init: ResponseInit = {}): Response {
       ...init.headers,
     },
   });
+}
+
+async function resolvePort(): Promise<number> {
+  const envPermission = await Deno.permissions.query({
+    name: "env",
+    variable: "PORT",
+  });
+
+  if (envPermission.state !== "granted") {
+    return DEFAULT_PORT;
+  }
+
+  const port = Number(Deno.env.get("PORT"));
+  return Number.isInteger(port) && port > 0 ? port : DEFAULT_PORT;
 }
 
 async function serveStyles(): Promise<Response> {
@@ -75,5 +89,6 @@ export async function handleRequest(request: Request): Promise<Response> {
 }
 
 if (import.meta.main) {
+  const PORT = await resolvePort();
   Deno.serve({ port: PORT }, handleRequest);
 }
