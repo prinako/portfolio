@@ -21,6 +21,7 @@ the structure stays easy to understand, customize, and scale.
 .
 ├── .dockerignore
 ├── Dockerfile
+├── docker-compose.yml
 ├── deno.json
 ├── main.ts
 ├── src
@@ -91,6 +92,44 @@ Then open:
 
 ```text
 http://localhost:8000
+```
+
+## Run With Docker Compose
+
+Compose pulls the published GitHub Container Registry image:
+
+```text
+ghcr.io/prinako/portfolio:main
+```
+
+Start the app with Compose:
+
+```sh
+docker compose up
+```
+
+Run it in the background:
+
+```sh
+docker compose up -d
+```
+
+Stop the Compose stack:
+
+```sh
+docker compose down
+```
+
+Use a different host port:
+
+```sh
+PORT=3000 docker compose up
+```
+
+Then open:
+
+```text
+http://localhost:3000
 ```
 
 ## Quality Checks
