@@ -1,0 +1,5 @@
+@import url("/styles.base.css");
+
+:root {
+  --language-accent: var(--accent);
+}
