@@ -1,7 +1,18 @@
 import { renderHomePage } from "./src/layout.ts";
+import {
+  DEFAULT_LANGUAGE,
+  getPageData,
+  type LanguageCode,
+  pageDataByLanguage,
+} from "./src/data/index.ts";
 
 const DEFAULT_PORT = 8000;
-const STYLE_PATH = new URL("./src/styles.css", import.meta.url);
+const STYLE_PATHS = new Map<string, URL>([
+  ["/styles.css", new URL("./src/styles/en-us.css", import.meta.url)],
+  ["/styles.en-us.css", new URL("./src/styles/en-us.css", import.meta.url)],
+  ["/styles.pt-br.css", new URL("./src/styles/pt-br.css", import.meta.url)],
+  ["/styles.base.css", new URL("./src/styles/base.css", import.meta.url)],
+]);
 
 const textHeaders = {
   "content-type": "text/html; charset=utf-8",
@@ -33,9 +44,25 @@ async function resolvePort(): Promise<number> {
   return Number.isInteger(port) && port > 0 ? port : DEFAULT_PORT;
 }
 
-async function serveStyles(): Promise<Response> {
+function resolveLanguage(pathname: string): LanguageCode | undefined {
+  if (pathname === "/") {
+    return DEFAULT_LANGUAGE;
+  }
+
+  const language = pathname.slice(1);
+
+  return language in pageDataByLanguage ? language as LanguageCode : undefined;
+}
+
+async function serveStyles(pathname: string): Promise<Response> {
+  const stylePath = STYLE_PATHS.get(pathname);
+
+  if (!stylePath) {
+    return new Response("Stylesheet not found", { status: 404 });
+  }
+
   try {
-    const css = await Deno.readTextFile(STYLE_PATH);
+    const css = await Deno.readTextFile(stylePath);
 
     return new Response(css, {
       headers: {
@@ -60,13 +87,18 @@ export async function handleRequest(request: Request): Promise<Response> {
     });
   }
 
-  if (url.pathname === "/") {
-    return new Response(request.method === "HEAD" ? null : renderHomePage(), {
-      headers: textHeaders,
-    });
+  const language = resolveLanguage(url.pathname);
+
+  if (language) {
+    return new Response(
+      request.method === "HEAD" ? null : renderHomePage(getPageData(language)),
+      {
+        headers: textHeaders,
+      },
+    );
   }
 
-  if (url.pathname === "/styles.css") {
+  if (STYLE_PATHS.has(url.pathname)) {
     return request.method === "HEAD"
       ? new Response(null, {
         headers: {
@@ -74,7 +106,7 @@ export async function handleRequest(request: Request): Promise<Response> {
           "cache-control": "public, max-age=3600",
         },
       })
-      : await serveStyles();
+      : await serveStyles(url.pathname);
   }
 
   if (url.pathname === "/health") {
