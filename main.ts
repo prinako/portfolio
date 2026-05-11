@@ -45,13 +45,35 @@ async function resolvePort(): Promise<number> {
 }
 
 function resolveLanguage(pathname: string): LanguageCode | undefined {
-  if (pathname === "/") {
-    return DEFAULT_LANGUAGE;
-  }
-
   const language = pathname.slice(1);
 
   return language in pageDataByLanguage ? language as LanguageCode : undefined;
+}
+
+function resolvePreferredLanguage(request: Request): LanguageCode {
+  const acceptedLanguages = request.headers.get("accept-language");
+
+  if (!acceptedLanguages) {
+    return DEFAULT_LANGUAGE;
+  }
+
+  const languageRanges = acceptedLanguages
+    .split(",")
+    .map((languageRange) => languageRange.trim().toLowerCase());
+
+  for (const languageRange of languageRanges) {
+    const [languageTag] = languageRange.split(";");
+
+    if (languageTag === "pt" || languageTag.startsWith("pt-")) {
+      return "pt-br";
+    }
+
+    if (languageTag === "en" || languageTag.startsWith("en-")) {
+      return "en-us";
+    }
+  }
+
+  return DEFAULT_LANGUAGE;
 }
 
 async function serveStyles(pathname: string): Promise<Response> {
@@ -87,7 +109,9 @@ export async function handleRequest(request: Request): Promise<Response> {
     });
   }
 
-  const language = resolveLanguage(url.pathname);
+  const language = url.pathname === "/"
+    ? resolvePreferredLanguage(request)
+    : resolveLanguage(url.pathname);
 
   if (language) {
     return new Response(
