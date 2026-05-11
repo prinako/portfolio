@@ -1,5 +1,9 @@
-import { experience, projects, siteInfo, skills } from "./data.ts";
-import type { ExperienceItem, Project, SkillCategory } from "./data.ts";
+import type {
+  ExperienceItem,
+  PageData,
+  Project,
+  SkillCategory,
+} from "./data/index.ts";
 
 function escapeHtml(value: string): string {
   return value
@@ -10,8 +14,8 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#39;");
 }
 
-function renderSocialLinks(): string {
-  return siteInfo.socialLinks
+function renderSocialLinks(data: PageData): string {
+  return data.siteInfo.socialLinks
     .map((link) =>
       `<a href="${escapeHtml(link.href)}" rel="noreferrer" target="_blank">${
         escapeHtml(link.label)
@@ -33,7 +37,7 @@ function renderSkillGroup(group: SkillCategory): string {
   `;
 }
 
-function renderProject(project: Project): string {
+function renderProject(project: Project, data: PageData): string {
   const technologies = project.technologies
     .map((technology) => `<span>${escapeHtml(technology)}</span>`)
     .join("");
@@ -41,12 +45,14 @@ function renderProject(project: Project): string {
   return `
     <article class="glass-card project-card">
       <div>
-        <p class="eyebrow">Selected project</p>
+        <p class="eyebrow">${escapeHtml(data.text.selectedProject)}</p>
         <h3>${escapeHtml(project.name)}</h3>
         <p>${escapeHtml(project.summary)}</p>
       </div>
       <p class="project-impact">${escapeHtml(project.impact)}</p>
-      <div class="tag-list" aria-label="Technologies used">${technologies}</div>
+      <div class="tag-list" aria-label="${
+    escapeHtml(data.text.technologiesAria)
+  }">${technologies}</div>
     </article>
   `;
 }
@@ -63,42 +69,64 @@ function renderExperienceStep(item: ExperienceItem): string {
   `;
 }
 
-function renderNavigation(): string {
+function renderLanguageLinks(data: PageData): string {
+  return data.alternateLanguages
+    .map((language) => {
+      const isCurrent = language.code === data.language;
+      return `<a href="${escapeHtml(language.href)}" ${
+        isCurrent ? 'aria-current="page"' : ""
+      }>${escapeHtml(language.label)}</a>`;
+    })
+    .join("");
+}
+
+function renderNavigation(data: PageData): string {
   return `
     <header class="site-header">
-      <nav class="nav-shell" aria-label="Primary navigation">
+      <nav class="nav-shell" aria-label="${
+    escapeHtml(data.text.navigationAria)
+  }">
         <a class="brand" href="#top" aria-label="${
-    escapeHtml(siteInfo.name)
-  } home">
+    escapeHtml(data.siteInfo.name)
+  } ${escapeHtml(data.text.homeAriaSuffix)}">
           <span></span>
-          ${escapeHtml(siteInfo.name)}
+          ${escapeHtml(data.siteInfo.name)}
         </a>
-        <div class="nav-links">
-          <a href="#skills">Skills</a>
-          <a href="#projects">Projects</a>
-          <a href="#process">Process</a>
-          <a href="#contact">Contact</a>
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="#skills">${escapeHtml(data.text.navigation.skills)}</a>
+            <a href="#projects">${escapeHtml(data.text.navigation.projects)}</a>
+            <a href="#process">${escapeHtml(data.text.navigation.process)}</a>
+            <a href="#contact">${escapeHtml(data.text.navigation.contact)}</a>
+          </div>
+          <div class="language-switcher" aria-label="${
+    escapeHtml(data.text.languageLabel)
+  }">${renderLanguageLinks(data)}</div>
         </div>
       </nav>
     </header>
   `;
 }
 
-function renderHero(): string {
+function renderHero(data: PageData): string {
   return `
     <section class="hero section-shell" id="top">
       <div class="hero-copy">
-        <p class="eyebrow">AI research + production systems</p>
-        <h1>${escapeHtml(siteInfo.role)}</h1>
-        <p class="hero-summary">${escapeHtml(siteInfo.summary)}</p>
+        <p class="eyebrow">${escapeHtml(data.text.heroEyebrow)}</p>
+        <h1>${escapeHtml(data.siteInfo.role)}</h1>
+        <p class="hero-summary">${escapeHtml(data.siteInfo.summary)}</p>
         <div class="hero-actions">
-          <a class="button primary" href="#projects">View work</a>
+          <a class="button primary" href="#projects">${
+    escapeHtml(data.text.heroPrimaryAction)
+  }</a>
           <a class="button secondary" href="mailto:${
-    escapeHtml(siteInfo.email)
-  }">Start a conversation</a>
+    escapeHtml(data.siteInfo.email)
+  }">${escapeHtml(data.text.heroSecondaryAction)}</a>
         </div>
       </div>
-      <aside class="terminal-card" aria-label="Profile snapshot">
+      <aside class="terminal-card" aria-label="${
+    escapeHtml(data.text.snapshotAria)
+  }">
         <div class="terminal-header">
           <span></span>
           <span></span>
@@ -106,22 +134,22 @@ function renderHero(): string {
         </div>
         <dl>
           <div>
-            <dt>name</dt>
-            <dd>${escapeHtml(siteInfo.name)} / ${
-    escapeHtml(siteInfo.handle)
+            <dt>${escapeHtml(data.text.snapshot.name)}</dt>
+            <dd>${escapeHtml(data.siteInfo.name)} / ${
+    escapeHtml(data.siteInfo.handle)
   }</dd>
           </div>
           <div>
-            <dt>focus</dt>
-            <dd>${escapeHtml(siteInfo.focus)}</dd>
+            <dt>${escapeHtml(data.text.snapshot.focus)}</dt>
+            <dd>${escapeHtml(data.siteInfo.focus)}</dd>
           </div>
           <div>
-            <dt>stack</dt>
-            <dd>${escapeHtml(siteInfo.stack)}</dd>
+            <dt>${escapeHtml(data.text.snapshot.stack)}</dt>
+            <dd>${escapeHtml(data.siteInfo.stack)}</dd>
           </div>
           <div>
-            <dt>status</dt>
-            <dd>${escapeHtml(siteInfo.availability)}</dd>
+            <dt>${escapeHtml(data.text.snapshot.status)}</dt>
+            <dd>${escapeHtml(data.siteInfo.availability)}</dd>
           </div>
         </dl>
       </aside>
@@ -129,99 +157,105 @@ function renderHero(): string {
   `;
 }
 
-function renderSkills(): string {
+function renderSkills(data: PageData): string {
   return `
     <section class="section-shell content-section" id="skills">
       <div class="section-heading">
-        <p class="eyebrow">Core capabilities</p>
-        <h2>Computer engineering foundations with hands-on product delivery.</h2>
+        <p class="eyebrow">${escapeHtml(data.text.skillsEyebrow)}</p>
+        <h2>${escapeHtml(data.text.skillsHeading)}</h2>
       </div>
-      <div class="skills-grid">${skills.map(renderSkillGroup).join("")}</div>
+      <div class="skills-grid">${
+    data.skills.map(renderSkillGroup).join("")
+  }</div>
     </section>
   `;
 }
 
-function renderProjects(): string {
+function renderProjects(data: PageData): string {
   return `
     <section class="section-shell content-section" id="projects">
       <div class="section-heading">
-        <p class="eyebrow">Selected systems</p>
-        <h2>Projects shaped around campus needs, research questions, and reliable infrastructure.</h2>
+        <p class="eyebrow">${escapeHtml(data.text.projectsEyebrow)}</p>
+        <h2>${escapeHtml(data.text.projectsHeading)}</h2>
       </div>
-      <div class="project-grid">${projects.map(renderProject).join("")}</div>
+      <div class="project-grid">${
+    data.projects.map((project) => renderProject(project, data)).join("")
+  }</div>
     </section>
   `;
 }
 
-function renderProcess(): string {
+function renderProcess(data: PageData): string {
   return `
     <section class="section-shell content-section" id="process">
       <div class="section-heading">
-        <p class="eyebrow">Workflow</p>
-        <h2>A practical path from local problem to working software.</h2>
+        <p class="eyebrow">${escapeHtml(data.text.processEyebrow)}</p>
+        <h2>${escapeHtml(data.text.processHeading)}</h2>
       </div>
       <ol class="process-list">${
-    experience.map(renderExperienceStep).join("")
+    data.experience.map(renderExperienceStep).join("")
   }</ol>
     </section>
   `;
 }
 
-function renderContact(): string {
+function renderContact(data: PageData): string {
   return `
     <section class="contact-band" id="contact">
       <div class="section-shell contact-shell">
         <div>
-          <p class="eyebrow">Contact</p>
-          <h2>Let’s build useful software from research, infrastructure, and real-world needs.</h2>
-          <p>${escapeHtml(siteInfo.location)} · ${
-    escapeHtml(siteInfo.availability)
+          <p class="eyebrow">${escapeHtml(data.text.contactEyebrow)}</p>
+          <h2>${escapeHtml(data.text.contactHeading)}</h2>
+          <p>${escapeHtml(data.siteInfo.location)} · ${
+    escapeHtml(data.siteInfo.availability)
   }</p>
         </div>
         <div class="contact-actions">
           <a class="button primary" href="mailto:${
-    escapeHtml(siteInfo.email)
-  }">${escapeHtml(siteInfo.email)}</a>
-          <div class="social-links">${renderSocialLinks()}</div>
+    escapeHtml(data.siteInfo.email)
+  }">${escapeHtml(data.siteInfo.email)}</a>
+          <div class="social-links">${renderSocialLinks(data)}</div>
         </div>
       </div>
     </section>
   `;
 }
 
-function renderFooter(): string {
+function renderFooter(data: PageData): string {
   return `
     <footer class="site-footer">
       <p>&copy; ${new Date().getFullYear()} ${
-    escapeHtml(siteInfo.name)
-  }. Built with Deno and plain TypeScript.</p>
+    escapeHtml(data.siteInfo.name)
+  }. ${escapeHtml(data.text.footerSuffix)}</p>
     </footer>
   `;
 }
 
-export function renderHomePage(): string {
+export function renderHomePage(data: PageData): string {
   return `<!doctype html>
-<html lang="en">
+<html lang="${escapeHtml(data.htmlLang)}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="Professional developer portfolio focused on AI research, semantic communication, knowledge distillation, and self-hosted infrastructure."
+      content="${escapeHtml(data.text.metaDescription)}"
     >
-    <title>${escapeHtml(siteInfo.name)} | ${escapeHtml(siteInfo.role)}</title>
-    <link rel="stylesheet" href="/styles.css">
+    <title>${escapeHtml(data.siteInfo.name)} | ${
+    escapeHtml(data.siteInfo.role)
+  }</title>
+    <link rel="stylesheet" href="${escapeHtml(data.stylesheet)}">
   </head>
   <body>
-    ${renderNavigation()}
+    ${renderNavigation(data)}
     <main>
-      ${renderHero()}
-      ${renderSkills()}
-      ${renderProjects()}
-      ${renderProcess()}
-      ${renderContact()}
+      ${renderHero(data)}
+      ${renderSkills(data)}
+      ${renderProjects(data)}
+      ${renderProcess(data)}
+      ${renderContact(data)}
     </main>
-    ${renderFooter()}
+    ${renderFooter(data)}
   </body>
 </html>`;
 }
