@@ -17,17 +17,21 @@ export type ExperienceItem = {
 };
 
 export const siteInfo = {
-  name: "Alex Morgan",
-  role: "AI Systems Researcher & Full-Stack Infrastructure Engineer",
-  location: "Remote / Open Source",
-  email: "hello@example.dev",
-  availability: "Available for research engineering and infrastructure work",
+  name: "Prince Nyarko",
+  handle: "prinako",
+  role: "Computer Engineering Student & Software Developer",
+  location: "Brazil · Universidade Federal do Pará",
+  email: "mail@prinako.online",
+  availability: "Building research, mobile, and infrastructure projects",
+  focus: "computer vision, mobile apps, and resilient communication systems",
+  stack: "Flutter · Python · Docker · Linux",
   summary:
-    "I build reliable AI and developer platforms that turn research ideas into resilient, observable systems. My work spans semantic communication, model compression, self-hosted infrastructure, and production-grade application delivery.",
+    "I am a Computer Engineering student at UFPA with experience in IT support, software development, and image recognition research using drones. My work connects practical mobile products, AI experiments, Docker-based infrastructure, and offline-first communication tools.",
   socialLinks: [
-    { label: "GitHub", href: "https://github.com/example" },
-    { label: "LinkedIn", href: "https://linkedin.com/in/example" },
-    { label: "Research Notes", href: "https://example.dev/notes" },
+    { label: "GitHub", href: "https://github.com/prinako" },
+    { label: "ORCID", href: "https://orcid.org/0009-0008-9233-6367" },
+    { label: "X", href: "https://twitter.com/prinako1" },
+    { label: "Instagram", href: "https://www.instagram.com/prinako2" },
   ],
 };
 
@@ -35,11 +39,12 @@ export const skills: SkillCategory[] = [
   {
     name: "AI Research",
     skills: [
-      "Semantic communication",
-      "Knowledge distillation",
+      "YOLOv8",
+      "Drone image recognition",
+      "Vegetation recognition",
       "PyTorch",
-      "Experiment design",
-      "Model evaluation",
+      "Computer vision",
+      "Research prototyping",
     ],
   },
   {
@@ -53,12 +58,35 @@ export const skills: SkillCategory[] = [
     ],
   },
   {
-    name: "Product Engineering",
+    name: "Software Engineering",
     skills: [
-      "Deno",
-      "TypeScript",
-      "React",
+      "Python",
+      "Dart",
       "Flutter",
+      "React",
+      "React Native",
+      "Deno",
+    ],
+  },
+  {
+    name: "Backend and Data",
+    skills: [
+      "Node.js",
+      "Express.js",
+      "Socket.io",
+      "MongoDB",
+      "PostgreSQL",
+      "WebRTC",
+    ],
+  },
+  {
+    name: "Mobile and Web",
+    skills: [
+      "Flutter",
+      "Dart",
+      "HTML",
+      "CSS",
+      "JavaScript",
       "Node.js",
     ],
   },
@@ -66,48 +94,56 @@ export const skills: SkillCategory[] = [
 
 export const projects: Project[] = [
   {
-    name: "Semantic Link Lab",
+    name: "RU Digital UFPA",
     summary:
-      "Research workspace for testing semantic communication strategies under noisy network conditions.",
+      "A Flutter mobile app that helps UFPA students access daily University Restaurant menu information, service hours, and update notifications.",
     impact:
-      "Improved experiment turnaround with reproducible pipelines, structured logging, and lightweight dashboards.",
-    technologies: ["PyTorch", "Deno", "Docker", "Linux"],
+      "Built for a real campus workflow, bringing useful food service information closer to students in a focused mobile experience.",
+    technologies: ["Flutter", "Dart", "Firebase", "MongoDB"],
   },
   {
-    name: "DistillKit",
+    name: "Vegetation Recognition Research",
     summary:
-      "A modular toolkit for compressing large teacher models into efficient student models for edge deployment.",
+      "Computer vision research project focused on vegetation recognition using drone imagery and YOLOv8.",
     impact:
-      "Reduced prototype model size while preserving task-specific accuracy through configurable distillation recipes.",
-    technologies: ["Knowledge distillation", "Python", "PyTorch", "Docker"],
+      "Explores how AI can support environmental analysis by turning aerial imagery into structured recognition workflows.",
+    technologies: ["YOLOv8", "Python", "Computer vision", "Drones"],
   },
   {
-    name: "Self-Hosted Control Plane",
+    name: "WhyDisconnected",
     summary:
-      "Private infrastructure stack for services, reverse proxies, network routing, monitoring, and backups.",
+      "An offline and online communication app built around Socket.io and WebRTC for local-first connectivity scenarios.",
     impact:
-      "Created a dependable operations baseline for personal and client systems with clear recovery procedures.",
-    technologies: ["Linux", "Networking", "Docker", "Deno"],
+      "Investigates resilient communication patterns for moments when conventional internet access is unreliable.",
+    technologies: ["Socket.io", "WebRTC", "Node.js", "Networking"],
+  },
+  {
+    name: "RU Server Docker",
+    summary:
+      "Docker-based server work for RU Digital UFPA, focused on serving updated menu and service data.",
+    impact:
+      "Connects mobile product delivery with maintainable backend infrastructure for a student-facing service.",
+    technologies: ["Docker", "JavaScript", "Node.js", "Linux"],
   },
 ];
 
 export const experience: ExperienceItem[] = [
   {
     stage: "01",
-    title: "Research and validate",
+    title: "Investigate real problems",
     description:
-      "Turn ambiguous AI ideas into measurable experiments with crisp assumptions, baselines, and evaluation loops.",
+      "Start from practical contexts such as campus services, offline communication, and drone-based image recognition.",
   },
   {
     stage: "02",
-    title: "Engineer the platform",
+    title: "Prototype with the right stack",
     description:
-      "Build maintainable services, typed interfaces, and infrastructure that can survive real usage.",
+      "Use Flutter, Python, Docker, Linux, Node.js, and networking tools to move from concept to working system.",
   },
   {
     stage: "03",
-    title: "Ship and observe",
+    title: "Ship, maintain, and improve",
     description:
-      "Deploy with clear runtime behavior, operational checks, and feedback channels for continuous improvement.",
+      "Keep projects useful after launch through infrastructure care, documentation, and iterative feature work.",
   },
 ];
