@@ -1,0 +1,10 @@
+.git
+.codex
+.DS_Store
+Dockerfile
+README.md
+deno.lock
+node_modules
+coverage
+dist
+tmp
