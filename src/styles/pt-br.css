@@ -9,3 +9,18 @@
 .process-step p {
   max-width: 760px;
 }
+
+.hero-copy {
+  container-type: inline-size;
+}
+
+
+h1 {
+  font-size: clamp(2.7rem, 7.5vw, 5.2rem);
+  line-height: 1;
+}
+
+/* h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.9rem);
+  line-height: 1.12;
+} */
